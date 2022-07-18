@@ -19,3 +19,15 @@ header {
     margin: 2px 0 25px 0;
     text-align: center;
 }
+
+#rightSide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#holdContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

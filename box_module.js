@@ -51,9 +51,8 @@ class OutputBox {
     }
 
     createOutput () {
-        this.body = document.getElementsByTagName('body')[0];
         this.outputDisplay = document.createElement('p');
-        this.body.appendChild(this.outputDisplay);
+        document.body.appendChild(this.outputDisplay);
     
         this.outputDisplay.innerHTML = this.displayText;
         this.outputDisplay.style.width = this.width;
@@ -81,6 +80,10 @@ class OutputBox {
         this.outputDisplay.style.fontSize = this.textSize;
         this.outputDisplay.style.color = this.textColor;
         this.outputDisplay.style.border = this.border;
+    }
+
+    setClass(className) {
+        this.outputDisplay.setAttribute('class', className);
     }
     
 }    
@@ -111,9 +114,8 @@ class InputBox {
     }
 
     createInput() {
-        this.body = document.getElementsByTagName('body')[0];
         this.div = document.createElement('div');
-        this.body.appendChild(this.div)
+        document.body.appendChild(this.div)
     
         this.div.style.width = this.width;
         this.div.style.height = this.height;
@@ -174,17 +176,18 @@ class InputBox {
         this.submit.onclick = null;
     }
 
-    class Button {
-        constructor(displayText = "button", 
-                    onclick = null) {
-            this.text = displayText;
-            this.onclick = null;
-        }
+    disable () {
+        this.submit.disabled = true;
+        this.textInput.disabled = true;
+    }
 
-        createButton() {
-            
-        }
-            
+    enable () {
+        this.submit.disabled = false;
+        this.textInput.disabled = false;
+    }
+
+    setClass(className) {
+        this.div.setAttribute('class', className);
     }
 }
 

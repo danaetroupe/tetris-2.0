@@ -328,6 +328,11 @@ class Canvas {
     // clears canvas
     clear() {
         this.context.clearRect(0,0,this.canvas.width, this.canvas.height)
+        this.spaces = [];
+        this.images = [];
+        this.outlines = [];
+        this.shapes = [];
+        this.letters = [];
     }
 
     // changes background color
@@ -352,6 +357,38 @@ class Canvas {
     
     }
 
+    setID(idName) {
+        this.canvas.setAttribute('id',idName);
+    }
+
+    setClass(className) {
+        this.canvas.setAttribute('class', className);
+    }
 }
 
-export {Canvas}
+class Div {
+    constructor(contains, id) { // contains should be a class
+        this.contains = document.querySelectorAll(contains);
+        this.id = id;
+    }
+    createDiv() {
+        this.div = document.createElement('div');
+        document.body.append(this.div);
+        for (let n = 0; n < this.contains.length; n++) {
+            this.div.append(this.contains[n]);
+        }
+        if (this.id !== undefined) {
+            this.div.setAttribute('id',this.id);
+        }
+    }
+    setID(idName) {
+        this.div.setAttribute('id',idName);
+    }
+
+    setClass(className) {
+        this.div.setAttribute('class', className);
+    }
+
+}
+
+export {Canvas, Div}

@@ -6,12 +6,22 @@ let g = {};
 window.HTMLBodyElement.onload = init();
 
 function init() {
-    g.canvas = new grid.Canvas(ROWS, COLUMNS, SCALE, BACKGROUND_COLOR)
-    g.canvas.createCanvas();
-    g.scoreDisplay = new box.OutputBox(SCALE, SWAP * SCALE + "px", "000000");
-    g.scoreDisplay.createOutput();
     g.swap = new grid.Canvas(SWAP, SWAP, SCALE, BACKGROUND_COLOR)
     g.swap.createCanvas();
+    
+    g.canvas = new grid.Canvas(ROWS, COLUMNS, SCALE, BACKGROUND_COLOR)
+    g.canvas.createCanvas();
+    g.scoreDisplay = new grid.Canvas(1, 6, SCALE, BACKGROUND_COLOR);
+    g.scoreDisplay.createCanvas();
+    
+    g.highScoreDisplay = new grid.Canvas(6, 12, SCALE *.75)
+    g.highScoreDisplay.createCanvas();
+
+    g.typeName = new box.InputBox(SCALE);
+    g.typeName.createInput();
+    g.typeName.disable();
+
+    layout();
     
     g.gameOn = true;
     g.level = 1;
@@ -25,7 +35,26 @@ function init() {
     play();
     animate();
     //drawBackground();
+
+    g.highScores = [];
+    for (let i = 0; i < 5; i++) {
+        g.highScores.push({name: "DT", score: 0});
+    }
+    sortHighScores();
 }
+
+function sortHighScores () {
+    g.highScores.sort(function(x, y){
+        return y.score - x.score;
+    });
+    g.highScoreDisplay.clear();
+    for(let i = 0; i < 5; i ++) {
+        if (g.highScores[i]['name'].length > 2) {g.highScores[i]['name'] = g.highScores[i]['name'].slice(0,2)}
+        g.highScoreDisplay.paintText(1, i, g.highScores[i]['name'] + " " + g.highScores[i]['score'])
+    }
+}
+
+
 
 function keyHandler(e) {
     if (g.gameOn) {
@@ -72,6 +101,7 @@ function keyHandler(e) {
                 } else {
                     a['x'] = COLUMNS/2;
                     a['y'] = -1;
+                    a.collide = [];
                     g.obj = a;
                 }
                 
@@ -266,7 +296,8 @@ function testRow() {
         row += 1;
     }
         g.score += POINTS[rowsClearedLocal]
-        g.scoreDisplay.setText(g.score)
+        g.scoreDisplay.clear();
+        g.scoreDisplay.paintText(1,-0.3,g.score+"")
 }
 
 function clearRow(row) {
@@ -295,5 +326,52 @@ function clearRow(row) {
 
 function gameOver() {
     g.gameOn = false;
-    g.canvas.paintText(1, ROWS/2, "GAME OVER")
+    for (let i = 0; i < COLUMNS; i++) {
+        g.canvas.paint(i, ROWS/2, "green")
+        g.canvas.paint(i, ROWS/2 + 1, "green")
+    } g.canvas.paintText(1, ROWS/2, "GAME OVER")
+    g.typeName.enable();
+    g.typeName.changeInput("TYPE INITALS HERE");
+    g.typeName.whenSubmit(submitHandler);
+    
+}
+
+function restartGame() {
+    g.level = 1;
+    g.obstacles = [];
+    g.hold = undefined;
+    g.alreadyHeld = false;
+    g.score = 0;
+    g.speed = FRAME_DELAY;
+    g.rowsCleared = 0;
+    g.canvas.clear();
+    g.swap.clear();
+    g.typeName.disable();
+    
+    g.gameOn = true;
+    play();
+    animate();
+    
+}
+
+function submitHandler() {
+    let name = g.typeName.readText();
+    g.highScores.push({name: name, score: g.score})
+    sortHighScores();
+    g.typeName.changeInput("TYPE INITALS HERE");
+    restartGame();
+}
+
+function layout () {
+    g.highScoreDisplay.setClass("right");
+    g.scoreDisplay.setClass("right");
+    g.typeName.setClass("right");
+    g.rightSide = new grid.Div(".right", "rightSide");
+    g.rightSide.createDiv();
+
+    g.swap.setClass("container");
+    g.canvas.setClass("container");
+    g.rightSide.setClass("container");
+    g.holdContainer = new grid.Div(".container", "holdContainer");
+    g.holdContainer.createDiv();
 }

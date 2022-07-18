@@ -60,4 +60,6 @@ const POINTS = {
         4: 1000
 }
 
-
+const INSTRUCTIONS = 
+        "TETRIS JAVASCRIPT PROJECT by Danae Troupe"
+        + "/n"
