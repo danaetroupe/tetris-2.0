@@ -13,3 +13,5 @@ Shift             -> Hard Drop
 'C'               -> Store/Swap Piece
 
 When complete, enter your initals to save your score. 
+
+![image](https://github.com/user-attachments/assets/f913042c-013d-4563-aa8b-cd0bdd39681a)
